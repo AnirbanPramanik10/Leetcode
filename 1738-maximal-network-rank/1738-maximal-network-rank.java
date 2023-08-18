@@ -1,37 +1,21 @@
 class Solution {
     public int maximalNetworkRank(int n, int[][] roads) {
-        Map<Integer, List<Integer>> graph = new HashMap<>();
-        for(int i = 0; i < n; i++){
-            graph.put(i, new ArrayList<>());
-        }
+        int degree[]=new int[n];
+        boolean connected[][]=new boolean[n][n];
 
-        for(int road[] : roads){
-            graph.get(road[0]).add(road[1]);
-            graph.get(road[1]).add(road[0]);
+        for(int a[]:roads){
+            degree[a[0]]++;
+            degree[a[1]]++;
+            connected[a[0]][a[1]] =true;
+            connected[a[1]][a[0]]=true;
         }
-
-        int maxi = Integer.MIN_VALUE;
-        for(int i = 0; i < n; i++){
-            for(int j = i + 1; j < n; j++){
-                maxi = Math.max(maxi, findNetworkRank(i, j, graph));
+        int temp=0;
+        for(int i=0;i<n;i++){
+            for(int j=i+1;j<n;j++){
+                temp=Math.max(temp,degree[i]+degree[j]-(connected[i][j]?1:0));
             }
         }
-        return maxi;
-    }
 
-    public int findNetworkRank(int i, int j, Map<Integer, List<Integer>> graph){
-        int cnt = 0;
-        boolean isConnected = false;
-        for(int node : graph.get(i)){
-            if(node == j){
-                isConnected = true;
-            }
-            cnt++;
-        }
-
-        for(int node : graph.get(j)){
-            cnt++;
-        }
-        return isConnected == true ? cnt - 1 : cnt;
+        return temp;
     }
 }
