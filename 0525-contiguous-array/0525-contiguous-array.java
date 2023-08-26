@@ -1,14 +1,15 @@
 class Solution {
     public int findMaxLength(int[] nums) {
-        Map<Integer, Integer> map = new HashMap<>();
-        map.put(0, -1);
-        int max = 0, sum = 0;
-    
-        for (int i = 0; i < nums.length; i++) {
-            sum += nums[i] == 0 ? -1 : 1;
-            max = Math.max(max, i - map.getOrDefault(sum, i));
-            map.putIfAbsent(sum, i);
-        } 
-    return max;
+        int length = nums.length, currentSum = length, maxLength = 0;
+        int[] sumIndexMap = new int[2 * length + 2];
+
+        for (int i = 0; i < length; i++) {
+            currentSum += (nums[i] << 1) - 1;
+
+            if (currentSum == length) maxLength = i + 1;
+            else if (sumIndexMap[currentSum] == 0) sumIndexMap[currentSum] = i + 1;
+            else maxLength = Math.max(maxLength, i - sumIndexMap[currentSum] + 1);
+        }
+        return maxLength;
     }
 }
