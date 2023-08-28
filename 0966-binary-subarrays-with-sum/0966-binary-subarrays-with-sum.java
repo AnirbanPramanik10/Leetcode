@@ -1,13 +1,16 @@
 class Solution {
     public int numSubarraysWithSum(int[] nums, int goal) {
-        int count = 0;
-        for(int i =0;i<nums.length;i++){
-            int ans = 0;
-            for(int j = i;j<nums.length;j++){
-                ans +=nums[j];
-                if(ans==goal)count++;
-            }
+        return atMostK(nums, goal) - atMostK(nums, goal - 1);
+    }
+
+    private int atMostK(int[] nums, int k) {
+        if (k < 0) return 0;
+        int cnt = 0, i = 0, n = nums.length, sum = 0;
+        for (int j = 0; j < n; j++) {
+            sum += nums[j];
+            while (sum > k) sum -= nums[i++];
+            cnt += j - i + 1;
         }
-        return count;
+        return cnt;
     }
 }
