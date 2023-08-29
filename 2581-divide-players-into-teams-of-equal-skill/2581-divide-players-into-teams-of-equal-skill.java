@@ -1,28 +1,19 @@
 class Solution {
-    public long dividePlayers(int[] skill) {
-        int sum = 0;
-        int max = 0;
-        for(int x : skill) {
-            sum += x;
-            if(x > max) max = x;
-        }
-        if(sum % (skill.length/2) != 0) return -1;
-        int teamVal = sum / (skill.length/2);
-        if(teamVal <= max) return -1;
-        long[] counts = new long[teamVal];
-        for(int x : skill) {
-            counts[x]++;
-        }
-        //System.out.println(Arrays.toString(counts));
-        long ret = 0;
-        for(int i = 1; i <= (teamVal/2); i++) {
-            if(counts[i] == counts[teamVal - i]) {
-                ret += counts[i]*i*(teamVal-i);
+    public long dividePlayers(int[] nums) {
+        int len = nums.length;
+        if (len == 2) return (long) nums[0] * nums[1];
+        
+        Arrays.sort(nums);
+        int minPlusMax = nums[0] + nums[len - 1];
+        long result = 0;
+        
+        for (int i = 0; i < len / 2; i++) {
+            if (nums[i] + nums[len - 1 - i] == minPlusMax) {
+                result += (long) nums[i] * nums[len - 1 - i];
+            } else {
+                return -1;
             }
-            else return -1;
-            //System.out.println(ret);
         }
-        if(teamVal % 2 == 0) ret -= counts[teamVal/2]*teamVal/2*(teamVal/2)/2;
-        return ret;
+        return result;
     }
 }
