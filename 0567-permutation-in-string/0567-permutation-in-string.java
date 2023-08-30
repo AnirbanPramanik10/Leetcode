@@ -1,24 +1,30 @@
 class Solution {
     public boolean checkInclusion(String s1, String s2) {
-        
-        HashMap<Character, Integer> map = new HashMap<>();
-        HashMap<Character, Integer> newMap = new HashMap<>();
+        int[] map = new int[128];
 
-        for (char C : s1.toCharArray()) {
-            map.put (C, map.getOrDefault(C, 0) + 1);
+        for (char ch : s1.toCharArray()) {
+            map[ch]++;
         }
 
-        for (int i = 0; i <= s2.length() - s1.length(); i++) {
-            
-            String subString = s2.substring(i, i + s1.length());
+        int start = 0, end = 0, count = s1.length();
+        char[] data = s2.toCharArray();
 
-            for (char S : subString.toCharArray()) {
-                newMap.put (S, newMap.getOrDefault(S, 0) + 1);
+        while (end < data.length) {
+            if (map[data[end++]]-- > 0) {
+                count--;
             }
-            
-            if (map.equals(newMap)) return true;
-            else newMap.clear();
+
+            while (count == 0) {
+                if (s1.length() == end - start) {
+                    return true;
+                }
+
+                if (map[data[start++]]++ == 0) {
+                    count++;
+                }
+            }
         }
+
         return false;
     }
 }
