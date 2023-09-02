@@ -1,10 +1,11 @@
 class Solution {
-    public int rangeBitwiseAnd(int m, int n) {
-        int i = 0;
-        for (; m != n; ++i) {
-            m >>= 1;
-            n >>= 1;
+    public int rangeBitwiseAnd(int left, int right) {
+        int base = 1;
+        while (left != right) {
+            left /= 2;
+            right /= 2;
+            base *= 2;
         }
-        return n << i;
+        return left * base;
     }
 }
