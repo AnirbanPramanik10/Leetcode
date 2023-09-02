@@ -1,27 +1,23 @@
 class Solution {
     public List<List<Integer>> kSmallestPairs(int[] nums1, int[] nums2, int k) {
-        PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> (b[0] + b[1])-(a[0]+a[1]));
-        
-        for (int i = 0; i < Math.min(nums1.length, k); i++) {
-            for (int j = 0; j < Math.min(nums2.length, k); j++) {
-                int[] cur={nums1[i], nums2[j]};
-                if (pq.size() == k) {
-                    int[] pk=pq.peek();
-                    if(pk[0]+pk[1]>cur[0]+cur[1]){
-                        pq.poll();
-                        pq.offer(cur);
-                    }
-                    else break;
-                }
-                else pq.offer(cur);
+        List<List<Integer>> output = new ArrayList<>();
+        PriorityQueue<int[]> sumQueue = new PriorityQueue<>((a, b) -> a[0] - b[0]);
+        for (int i = 0; i < nums1.length; i++) {
+            sumQueue.offer(new int[] { nums1[i] + nums2[0], 0 });
+        }
+        // System.out.println(sumQueue + "\n");
+
+        while (k-- > 0 && !sumQueue.isEmpty()) {
+            int[] curr = sumQueue.poll();
+            int sum = curr[0];
+            int num2Idx = curr[1];
+            output.add(List.of(sum - nums2[num2Idx], nums2[num2Idx]));
+
+            if (num2Idx + 1 < nums2.length) {
+                sumQueue.offer(new int[] { sum - nums2[num2Idx] + nums2[num2Idx + 1], num2Idx + 1 });
             }
         }
-
-        List<List<Integer>> result = new ArrayList<>();
-        while (!pq.isEmpty()) {
-            int[] pair = pq.poll();
-            result.add(Arrays.asList(pair[0], pair[1]));
-        }
-        return result;
+        // System.out.println(output + "\n");
+        return output;
     }
 }
