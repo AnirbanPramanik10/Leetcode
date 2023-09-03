@@ -1,6 +1,20 @@
 class Solution {
-    private static final int[] res = {1, 2, 3, 8, 10, 36, 41, 132, 250, 700, 750, 4010, 4237, 10680, 24679};
     public int countArrangement(int n) {
-        return res[n - 1];
+        boolean[] visited = new boolean[n + 1];
+        return backtrack(1, n, visited);
+    }
+
+     private int backtrack(int pos, int n, boolean[] visited) {
+        if (pos > n) return 1;
+
+        int count = 0;
+        for (int i = 1; i <= n; i++) {
+            if (!visited[i] && (i % pos == 0 || pos % i == 0)) {
+                visited[i] = true;
+                count += backtrack(pos + 1, n, visited);
+                visited[i] = false;
+            }
+        }
+        return count;
     }
 }
