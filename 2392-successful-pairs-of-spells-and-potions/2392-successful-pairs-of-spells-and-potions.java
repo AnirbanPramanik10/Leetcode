@@ -1,27 +1,17 @@
 class Solution {
-    public int ans[];
-    public int[] successfulPairs(int[] spells, int[] potions, long success) {
-        Arrays.sort(potions);
-        ans = new int[spells.length];
-        for(int i = 0; i < spells.length; i++){
-            binary(spells[i], potions, success, i);
-        }
-        return ans;
-    }
+    public int[] successfulPairs(int[] s, int[] p, long success) {
+        Arrays.sort(p);
+        int res[] = new int[s.length];
 
-    public void binary(int spell, int potions[], long success, int idx){
-        int l = 0, r = potions.length - 1;
-        while(l <= r){
-            int mid = l + (r - l) / 2;
-            long product = (long) spell * potions[mid];
-            if(product >= success){
-                // System.out.println(potions[mid]);
-                // ans[idx] = potions.length - l; 
-                r = mid - 1;
-                // return;
+        for(int i=0;i<s.length;i++){
+            int l = 0, r = p.length;
+            while(l<r){
+                int m = l+(r-l)/2;
+                if((long)p[m]*s[i]<success) l = m+1;
+                else r = m;
             }
-            else l = mid + 1;
+            res[i] = p.length-l;
         }
-        ans[idx] = potions.length - l;
+        return res;
     }
 }
