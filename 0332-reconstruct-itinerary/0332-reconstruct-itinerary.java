@@ -1,31 +1,23 @@
 class Solution {
     public List<String> findItinerary(List<List<String>> tickets) {
-        Map<String, PriorityQueue<String>> mapEdges = new HashMap<>();
-        
-        for(List<String> ticket : tickets) {
-            PriorityQueue<String> q = mapEdges.getOrDefault(ticket.get(0), new PriorityQueue<String>( (s1, s2) -> s1.compareTo(s2) )) ;
-            q.offer(ticket.get(1));
-            mapEdges.put(ticket.get(0), q);
-        }
-        
-        
-        Stack<String> s = new Stack<>();
-        s.push("JFK"); // Starting point is JFK
-        
-        List<String> finalIternary = new ArrayList<>();
-        while(!s.isEmpty()) {
+        LinkedList<String> ans = new LinkedList<>();
+        HashMap<String, PriorityQueue<String>> adj = new HashMap<>();
 
-            String source = s.peek();
-            PriorityQueue<String> q = mapEdges.get(source);
-            
-            if(q == null || q.isEmpty()) {
-                finalIternary.add(s.pop());
-            } else {
-                s.push(q.poll());
-            }
+        for (List<String> ticket : tickets) {
+            adj.computeIfAbsent(ticket.get(0), k -> new PriorityQueue<>()).add(ticket.get(1));
         }
-        
-        Collections.reverse(finalIternary);      
-        return finalIternary;
+
+        dfs("JFK", adj, ans);
+        return ans;
+    }
+
+    private void dfs(String src, HashMap<String, PriorityQueue<String>> adj, LinkedList<String> ans) {
+        PriorityQueue<String> destinations = adj.get(src);
+
+        while (destinations != null && !destinations.isEmpty()) {
+            dfs(destinations.poll(), adj, ans);
+        }
+
+        ans.addFirst(src);
     }
 }
