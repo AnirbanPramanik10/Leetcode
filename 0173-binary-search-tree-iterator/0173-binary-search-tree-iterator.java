@@ -14,30 +14,37 @@
  * }
  */
 class BSTIterator {
-    TreeNode root;
-
+    TreeNode base;
+    ArrayList<Integer> al = new ArrayList<>();
+    int max = 0;
     public BSTIterator(TreeNode root) {
-        TreeNode front = new TreeNode(0);
-        toList(root, front).right = null;
-        this.root = front.right;
-    }
-
-    private TreeNode toList(TreeNode root, TreeNode last) {
-        TreeNode l = root.left, r = root.right;
-        if (l != null) toList(l, last).right = root;
-        else last.right = root;    
-        if (r != null) return toList(r, root);
-        else return root;
+        base = root;
+        base = inorder(base);
+        max = al.size();
     }
     
     public int next() {
-        int res = root.val;
-        root =root.right;
-        return res;
+       int temp = al.get(0);
+       al.remove(0);
+       return temp;
     }
     
     public boolean hasNext() {
-        return (root != null);
+        if(al.size()>0)
+            return true;
+        
+        return false;
+    }
+
+    public TreeNode inorder(TreeNode root){
+        if(root==null)
+            return null;
+        
+        inorder(root.left);
+        al.add(root.val);
+        inorder(root.right);
+
+        return root;
     }
 }
 
