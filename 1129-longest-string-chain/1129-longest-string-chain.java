@@ -1,39 +1,18 @@
 class Solution {
     public int longestStrChain(String[] words) {
-        // Step 1: Sort the words array by length.
-        Arrays.sort(words, (String a, String b) -> a.length() - b.length());
-
-        // Step 2: Create a HashMap to store word-to-length relationships.
-        Map<String, Integer> dp = new HashMap<>();
-
-        // Initialize the maximum path length to 1 (a single word).
-        int maxPath = 1;
-
-        // Step 3: Iterate through the words.
-        for (String word : words) {
-            int currLength = 1; // Initialize the current word length to 1.
-            StringBuilder sb = new StringBuilder(word);
-
-            // Step 4: Iterate through each character of the current word.
-            for (int i = 0; i < word.length(); i++) {
-                sb.deleteCharAt(i); // Remove the current character.
-                String prevWord = sb.toString(); // Get the predecessor word.
-
-                // Update the current word length using dynamic programming.
-                currLength = Math.max(currLength, dp.getOrDefault(prevWord, 0) + 1);
-
-                // Restore the original word for the next iteration.
-                sb.insert(i, word.charAt(i));
+        Arrays.sort(words, (a, b) -> (a.length() - b.length()));
+        Map<String, Integer> map = new HashMap<>(); 
+        int res = 0;
+        for (String w : words){
+            int cnt = 0; 
+            for (int i = 0; i<w.length(); i++){
+                String t = w.substring(0, i) + w.substring(i+1);
+                int tchain = map.getOrDefault(t, 0);
+                cnt = Math.max(cnt, tchain+1);
             }
-
-            // Step 5: Store the current word and its calculated length in the map.
-            dp.put(word, currLength);
-
-            // Update the maximum path length if necessary.
-            maxPath = Math.max(maxPath, currLength);
+            map.put(w, cnt);
+            res = Math.max(res, cnt);
         }
-
-        // Step 6: Return the maximum path length.
-        return maxPath;
+        return res;
     }
 }
